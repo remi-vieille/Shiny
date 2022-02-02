@@ -50,3 +50,27 @@ test('Should display freelancers names', async () => {
     expect(screen.getByText('Hermione Granger')).toBeTruthy()
   })
 })
+
+it('Should display error content', async () => {
+  server.use(
+    rest.get('http://localhost:8000/freelances', (req, res, ctx) => {
+      // là on va pouvoir passer les datas mockées dans ce qui retourné en json
+      return res.once(
+        ctx.status(500),
+        ctx.json({
+          errorMessage: `Oups il y a eu une erreur dans l'API`,
+        })
+      )
+    })
+  )
+  render(<Freelances />)
+  // eslint-disable-next-line testing-library/prefer-query-by-disappearance
+  await waitForElementToBeRemoved(() => screen.getByTestId('loader'))
+  expect(screen.getByTestId('error')).toMatchInlineSnapshot(`
+  <span
+    data-testid="error"
+  >
+    Oups il y a eu une erreur dans l'API
+  </span>
+  `)
+})
