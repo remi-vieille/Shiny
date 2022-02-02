@@ -29,6 +29,7 @@ describe('Card', () => {
       </ThemeProvider>
     )
     const cardTitle = screen.getByText(/Harry/i)
+    // eslint-disable-next-line testing-library/no-node-access
     const parentNode = cardTitle.closest('div')
     fireEvent.click(parentNode)
     expect(cardTitle.textContent).toBe('⭐️ Harry Potter ⭐️')
